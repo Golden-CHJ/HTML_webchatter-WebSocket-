@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- 引入 Bootstrap -->
+    
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!--[endif]-->
+
+    <style type="text/css">
+        body{
+            background-image: url(http://i4.bvimg.com/634681/1abfc0a6d189bfb5.jpg);
+        }
+        @media (max-width: 926px) {
+            body {
+                background: none;
+            }
+        }
+    </style>
+    <script>
+        var i=0;
+        var color=
+            ['red','yellow','black','green','blue','orange'];
+
+        var _name=' ';
+
+        $(function () {
+
+            var socket=io();
+            $('form').submit(function () {
+                socket.emit('chat message',$('#sendmessage').val());
+                $('#sendmessage').val('');
+                return false;
+            });
+            socket.on('chat message',function (msg,name) {
+                $('#msg').append($('<li>').text(name+":"+ msg).css({"list-style-type" : "none" ,"color":color[i%6],"font-size":"20px"}));
+                //(222);
+
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+            $('#btn_name').click(function () {
+                socket.emit('user_name',$('#user_name').val());
+                return false;
+
+            });
+            socket.on('user_name',function (name,sum) {
+                i=sum;
+                $('#msg').append($('<li>').text(name+' connected '+i +' chatter now').css({"list-style-type" : "none" ,"color":color[i%6],"font-size":"20px"}));
+               // _name=name;
+
+            });
+            socket.on('disconnect',function (name) {
+
+                $('#msg').append($('<li>').text(name+' lifted '+--i+' chatter now').css({"list-style-type" : "none" ,"color":color[i%6],"font-size":"20px"}));
+
+
+            })
+        });
+function z() {
+    {
+
+       $('#sendmessage').removeAttr("disabled");
+       document.getElementById('head').style.visibility='hidden';
+       _name=document.getElementById('user_name').value;
+       alert(_name);
+  
+
+    }
+}
+    </script>
+
+</head>
+<body>
+<div style="height: 125px" id="head">
+
+        <p style="size: 20px;text-align: center">INPUT YOUR NAME FIRST:
+        <form action=" " style="text-align: center" id="name_form">
+            <input size="10px" id="user_name" >
+            <button type="submit" class="btn btn-info"  id="btn_name" onclick="z()">GO</button>
+        </form>
+
+    </div><!--haed:main-->
+
+<div   id="main" class="container" style="">
+
+    <div class="row" style="">
+        <div class="col-xs-10 col-xs-offset-1 "  style=";height: 30px;text-align: left;background-color: #148fee;border-radius: 10px 10px 0px 0px;">
+            <span class="glyphicon glyphicon-comment"style="size: 20px"></span> <span style="color: black;font-size: 18px;font-family: 'Microsoft JhengHei UI';padding-top: 50%"><strong>WebChater</strong>聊天室</span>
+        </div><!--col12-->
+        <div class="col-xs-10 col-xs-offset-1   " style="height: 500px;border-radius: 0px 0px 10px 10px;box-shadow: 10px 10px 5px #888888;background-color: white" >
+
+
+
+
+            <div class="col-xs-12"  style="height: 100%">
+
+
+                <div class="col-xs-12"   style="height: 70%;background-color:gainsboro" >
+                    <ul id="msg"  style="overflow-y: scroll;height:100%"></ul>
+                </div><!--col12-->
+                <br>
+                <div class="col-xs-12"  style=" height: 25%;"  >
+                <!--<form action="">
+                    <input style="height:100%;width:85%;resize:none" id="sendmessage" autocomplete="off "/>
+                    <button>SEND</button>
+                    <!--<button type="submit" class="btn btn-primary btn-md dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" style="position: absolute;right: 20px;bottom: 20px" >
+                        发送
+                    <span class="caret"></span>
+                    </button>->
+                </form>-->
+
+                    <form role="form">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" style="resize: none;" id="sendmessage" disabled ></textarea>
+
+                        </div>
+                        <div class="btn-group btn-group-sm"style="float: right">
+                            <button type="button" class="btn btn-danger" onclick="clearchat()">清屏</button>
+                            <button type="button" class="btn btn-default" onclick="jintan()">惊叹</button>
+                            <button type="button" class="btn btn-default" onclick="aixin()">爱心</button>
+                            <button type="submit" class="btn btn-info" onclick="cleanlimit()">发送</button>
+                        </div>
+                    </form>
+
+                </div><!--col12-->
+            </div><!--col9-->
+        </div><!--10-->
+    </div><!--row:main-->
+
+</div><!--con-->
+<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- 包括所有已编译的插件 -->
+<script src="js/bootstrap.min.js"></script>
+<script>
+    /*function sendmes() {
+        var mes=document.getElementById('sendmessage').innerText;
+        //alert(mes);
+        document.getElementById('chat').innerHTML=document.getElementById('chat').innerHTML+"<br/>"+mes;
+        document.getElementById('sendmessage').innerText='';
+
+
+    }*/var limit=0;
+    function clearchat() {
+        document.getElementById('sendmessage').value = "";
+    }
+    function jintan() {
+        if (limit<3) {
+            var n_text = '';
+            var text = document.getElementById('sendmessage').value;
+
+            for (var i = 0; i < text.length; i++) {
+                n_text = n_text + text[i] + "!";
+            }
+
+            document.getElementById('sendmessage').value = n_text;
+            limit++;
+        }
+        else{
+
+        }
+
+    }
+    function aixin() {
+        if (limit<3) {
+            var n_text = '';
+            var text = document.getElementById('sendmessage').value;
+
+            for (var i = 0; i < text.length; i++) {
+                n_text = n_text + text[i] + "❤";
+            }
+
+            document.getElementById('sendmessage').value = n_text;
+            limit++;
+        }
+        else{
+
+        }
+
+    }
+    function cleanlimit() {
+        limit=0;
+    }
+</script>
+</body>
+</html>
